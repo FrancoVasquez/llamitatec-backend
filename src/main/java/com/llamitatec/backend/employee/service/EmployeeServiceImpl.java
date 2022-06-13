@@ -72,8 +72,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<?> delete(Long employeeId, Long userId) {
-        return employeeRepository.findByIdAndUserId(employeeId, userId).map(data ->{
+    public ResponseEntity<?> delete(Long employeeId) {
+        return employeeRepository.findById(employeeId).map(data ->{
             employeeRepository.delete(data);
             return ResponseEntity.ok().build();
         }).orElseThrow(()-> new ResourceNotFoundException(ENTITY,employeeId));
