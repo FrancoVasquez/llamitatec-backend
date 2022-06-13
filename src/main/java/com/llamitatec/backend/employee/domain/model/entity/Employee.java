@@ -1,6 +1,7 @@
-package com.llamitatec.backend.client.domain.model.entity;
+package com.llamitatec.backend.employee.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.llamitatec.backend.service.domain.model.entity.Service;
 import com.llamitatec.backend.shared.domain.model.AuditModel;
 import com.llamitatec.backend.user.domain.model.entity.User;
 import lombok.*;
@@ -16,8 +17,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "clients")
-public class Client extends AuditModel {
+@Table(name = "employees")
+public class Employee extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,16 +51,15 @@ public class Client extends AuditModel {
 
     @NotNull
     @NotBlank
-    @Size(max = 500)
-    private String address;
-
-    @NotNull
-    @NotBlank
     @Size(max = 1000)
     private String description;
 
-
     //Relationship
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name= "service_id", nullable = false)
+    @JsonIgnore
+    private Service service;
+
     @OneToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name= "user_id", nullable = false)
     @JsonIgnore

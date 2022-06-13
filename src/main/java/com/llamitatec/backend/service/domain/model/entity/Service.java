@@ -1,5 +1,6 @@
 package com.llamitatec.backend.service.domain.model.entity;
 
+import com.llamitatec.backend.shared.domain.model.AuditModel;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +15,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 @Table(name = "services")
-public class Service {
+public class Service extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
