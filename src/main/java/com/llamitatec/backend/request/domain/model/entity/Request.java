@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.llamitatec.backend.client.domain.model.entity.Client;
 import com.llamitatec.backend.employee.domain.model.entity.Employee;
 import com.llamitatec.backend.service.domain.model.entity.Service;
+import com.llamitatec.backend.shared.domain.model.AuditModel;
 import com.llamitatec.backend.user.domain.model.entity.User;
 import lombok.*;
 
@@ -19,7 +20,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 @Table(name = "requests")
-public class Request {
+public class Request extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
