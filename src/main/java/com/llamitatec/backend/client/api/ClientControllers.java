@@ -28,13 +28,13 @@ public class ClientControllers {
     }
 
     @GetMapping("{userId}")
-    public ClientResource getClientById(@PathVariable("userId") Long userId){
-        return mapper.toResource(clientService.getById(userId));
+    public ClientResource getClientByUserId(@PathVariable("userId") Long userId){
+        return mapper.toResource(clientService.getByUserId(userId));
     }
 
-    @PostMapping
-    public ClientResource createClient(@RequestBody CreateClientResource resource){
-        return mapper.toResource(clientService.create(mapper.toModel(resource)));
+    @PostMapping("{userId}")
+    public ClientResource createClient(@PathVariable("userId") Long userId,@RequestBody CreateClientResource resource){
+        return mapper.toResource(clientService.create(userId, mapper.toModel(resource)));
     }
 
     @PutMapping("{clientId}")
