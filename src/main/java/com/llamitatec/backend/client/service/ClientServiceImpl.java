@@ -5,6 +5,7 @@ import com.llamitatec.backend.client.domain.persistence.ClientRepository;
 import com.llamitatec.backend.client.domain.service.ClientService;
 import com.llamitatec.backend.shared.exception.ResourceNotFoundException;
 import com.llamitatec.backend.shared.exception.ResourceValidationException;
+import com.llamitatec.backend.user.domain.persistence.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +19,12 @@ import java.util.Set;
 @Service
 public class ClientServiceImpl implements ClientService {
     private static final String ENTITY = "Client";
+    private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final Validator validator;
 
-    public ClientServiceImpl(ClientRepository clientRepository, Validator validator) {
+    public ClientServiceImpl(UserRepository userRepository, ClientRepository clientRepository, Validator validator) {
+        this.userRepository = userRepository;
         this.clientRepository = clientRepository;
         this.validator = validator;
     }
@@ -37,18 +40,21 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client getById(Long clientId) {
-        return clientRepository.findByUserId(clientId);
+    public Client getByUserId(Long userId) {
+        return clientRepository.findByUserId(userId);
     }
 
     @Override
-    public Client create(Client client) {
-        Set<ConstraintViolation<Client>> violations=validator.validate(client);
+    public Client create(Long userId, Client client) {
+        Set<ConstraintViolation<Client>> violations = validator.validate(client);
 
         if(!violations.isEmpty())
-            throw new ResourceValidationException(ENTITY,violations);
+            throw new ResourceValidationException(ENTITY, violations);
 
-        return clientRepository.save(client);
+        return userRepository.findById(userId).map(data -> {
+            client.setUser(data);
+            return clientRepository.save(client);
+        }).orElseThrow(() -> new ResourceNotFoundException("User", userId));
     }
 
     @Override

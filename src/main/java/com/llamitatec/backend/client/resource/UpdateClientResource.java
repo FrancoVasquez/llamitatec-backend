@@ -45,6 +45,4 @@ public class UpdateClientResource {
     @NotBlank
     @Size(max = 1000)
     private String description;
-
-    private Long userId;
 }
