@@ -3,7 +3,7 @@ package com.llamitatec.backend.request.mapping;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration("userMappingConfiguration")
+@Configuration("requestMappingConfiguration")
 public class MappingConfiguration {
 
     @Bean

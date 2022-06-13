@@ -5,7 +5,6 @@ import com.llamitatec.backend.client.domain.model.entity.Client;
 import com.llamitatec.backend.employee.domain.model.entity.Employee;
 import com.llamitatec.backend.service.domain.model.entity.Service;
 import com.llamitatec.backend.shared.domain.model.AuditModel;
-import com.llamitatec.backend.user.domain.model.entity.User;
 import lombok.*;
 
 import javax.persistence.*;

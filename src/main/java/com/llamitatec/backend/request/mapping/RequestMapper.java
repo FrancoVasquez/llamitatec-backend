@@ -26,6 +26,8 @@ public class RequestMapper implements Serializable {
         return new PageImpl<>(mapper.mapList(modelList,RequestResource.class),pageable,modelList.size());
     }
 
+    public List<RequestResource> modelListToResource(List<Request> modelList){return mapper.mapList(modelList, RequestResource.class); }
+
     public Request toModel(CreateRequestResource resource){
         return mapper.map(resource,Request.class);
     }

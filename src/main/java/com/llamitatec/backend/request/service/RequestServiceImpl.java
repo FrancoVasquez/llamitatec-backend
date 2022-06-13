@@ -1,4 +1,4 @@
-package com.llamitatec.backend.request;
+package com.llamitatec.backend.request.service;
 
 import com.llamitatec.backend.client.domain.persistence.ClientRepository;
 import com.llamitatec.backend.employee.domain.persistence.EmployeeRepository;
@@ -8,25 +8,25 @@ import com.llamitatec.backend.request.domain.service.RequestService;
 import com.llamitatec.backend.shared.exception.ResourceNotFoundException;
 import com.llamitatec.backend.shared.exception.ResourceValidationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.awt.print.Pageable;
+
+
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class RequestServiceImpl implements RequestService {
-    private static final String ENTITY = "Service";
-    private final EmployeeRepository employeeRepository;
+    private static final String ENTITY = "Request";
     private final ClientRepository clientRepository;
     private final RequestRepository requestRepository;
     private final Validator validator;
 
-    public RequestServiceImpl(EmployeeRepository employeeRepository, ClientRepository clientRepository, RequestRepository requestRepository, Validator validator) {
-        this.employeeRepository = employeeRepository;
+    public RequestServiceImpl(ClientRepository clientRepository, RequestRepository requestRepository, Validator validator) {
         this.clientRepository = clientRepository;
         this.requestRepository = requestRepository;
         this.validator = validator;
@@ -63,7 +63,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request create(Long employeeId, Long clientId, Request request) {
+    public Request create(Long clientId, Request request) {
         Set<ConstraintViolation<Request>> violations = validator.validate(request);
 
         if(!violations.isEmpty())
