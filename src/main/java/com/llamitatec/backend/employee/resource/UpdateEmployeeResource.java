@@ -40,4 +40,8 @@ public class UpdateEmployeeResource {
     @NotBlank
     @Size(max = 1000)
     private String description;
+
+    private Long userId;
+
+    private Long serviceId;
 }
