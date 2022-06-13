@@ -9,12 +9,14 @@ import com.llamitatec.backend.user.domain.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.List;
 import java.util.Set;
 
+@Service
 public class ClientServiceImpl implements ClientService {
     private static final String ENTITY = "Client";
     private final ClientRepository clientRepository;
