@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class MappingConfiguration {
 
     @Bean
-    public ServiceMapper userMapper(){
+    public ServiceMapper serviceMapper(){
         return new ServiceMapper();
     }
 }
