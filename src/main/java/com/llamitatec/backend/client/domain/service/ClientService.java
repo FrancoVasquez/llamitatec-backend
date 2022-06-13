@@ -12,6 +12,6 @@ public interface ClientService {
     Page<Client> getAll(Pageable pageable);
     Client getById(Long clientId);
     Client create(Client client);
-    Client update(Long userId, Client client);
+    Client update(Long clientId, Client client);
     ResponseEntity<?> delete(Long clientId, Long userId);
 }

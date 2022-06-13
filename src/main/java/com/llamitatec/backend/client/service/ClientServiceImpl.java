@@ -53,15 +53,15 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client update(Long userId, Client client) {
+    public Client update(Long clientId, Client client) {
         Set<ConstraintViolation<Client>> violations=validator.validate(client);
         if(!violations.isEmpty())
             throw new ResourceValidationException(ENTITY,violations);
 
-        if(!clientRepository.existsById(userId))
-            throw new ResourceNotFoundException("User", userId);
+        if(!clientRepository.existsById(clientId))
+            throw new ResourceNotFoundException("User", clientId);
 
-        return clientRepository.findById(userId).map(data ->
+        return clientRepository.findById(clientId).map(data ->
                         clientRepository.save(data.withAddress(client.getAddress())
                                 .withAge(client.getAge())
                                 .withAltphone(client.getAltphone())
@@ -70,7 +70,7 @@ public class ClientServiceImpl implements ClientService {
                                 .withPhone(client.getPhone())
                                 .withUrlToImage(client.getUrlToImage())
                                 ))
-                .orElseThrow(()-> new ResourceNotFoundException(ENTITY,userId));
+                .orElseThrow(()-> new ResourceNotFoundException(ENTITY, clientId));
     }
 
     @Override

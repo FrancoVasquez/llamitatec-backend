@@ -37,9 +37,9 @@ public class ClientControllers {
         return mapper.toResource(clientService.create(mapper.toModel(resource)));
     }
 
-    @PutMapping("{userId}")
-    private ClientResource updateClient(@PathVariable("userId") Long userId,@RequestBody UpdateClientResource resource){
-        return mapper.toResource(clientService.update(userId,mapper.toModel(resource)));
+    @PutMapping("{clientId}")
+    private ClientResource updateClient(@PathVariable("clientId") Long clientId,@RequestBody UpdateClientResource resource){
+        return mapper.toResource(clientService.update(clientId,mapper.toModel(resource)));
     }
 
     @DeleteMapping("{clientId}")
