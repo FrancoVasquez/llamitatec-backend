@@ -8,10 +8,10 @@ import java.awt.print.Pageable;
 import java.util.List;
 
 public interface RequestService {
-    List<Request> getAllClientId(Long clientId);
-    Page<Request> getAllClientId(Long clientId, Pageable pageable);
-    List<Request> getAllEmployeeId(Long employeeId);
-    Page<Request> getAllEmployeeId(Long employeeId, Pageable pageable);
+    List<Request> getAllByClientId(Long clientId);
+    Page<Request> getAllByClientId(Long clientId, Pageable pageable);
+    List<Request> getAllByEmployeeId(Long employeeId);
+    Page<Request> getAllByEmployeeId(Long employeeId, Pageable pageable);
 
     //post, put, delete
     Request create(Long employeeId, Long clientId, Request request);
