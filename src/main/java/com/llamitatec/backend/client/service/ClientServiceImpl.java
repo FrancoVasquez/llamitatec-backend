@@ -59,7 +59,7 @@ public class ClientServiceImpl implements ClientService {
             throw new ResourceValidationException(ENTITY,violations);
 
         if(!clientRepository.existsById(clientId))
-            throw new ResourceNotFoundException("User", clientId);
+            throw new ResourceNotFoundException("Client", clientId);
 
         return clientRepository.findById(clientId).map(data ->
                         clientRepository.save(data.withAddress(client.getAddress())

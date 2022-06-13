@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
-    private static final String ENTITY = "User";
+    private static final String ENTITY = "Service";
     private final ServiceRepository serviceRepository;
     private final Validator validator;
 
@@ -56,6 +56,10 @@ public class ServiceServiceImpl implements ServiceService {
         Set<ConstraintViolation<com.llamitatec.backend.service.domain.model.entity.Service>> violations=validator.validate(request);
         if(!violations.isEmpty())
             throw new ResourceValidationException(ENTITY,violations);
+
+        if(!serviceRepository.existsById(serviceId))
+            throw new ResourceNotFoundException("Service", serviceId);
+
         return serviceRepository.findById(serviceId).map(user ->
                         serviceRepository.save(user.withName(request.getName())
                                 .withDescription(request.getDescription())
