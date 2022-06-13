@@ -10,6 +10,11 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class CreateClientResource {
+    @NotNull
+    @NotBlank
+    @Size(max=100)
+    private String name;
+
     private int age;
 
     @NotNull

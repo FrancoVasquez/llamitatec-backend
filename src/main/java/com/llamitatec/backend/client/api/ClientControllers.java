@@ -5,9 +5,6 @@ import com.llamitatec.backend.client.mapping.ClientMapper;
 import com.llamitatec.backend.client.resource.ClientResource;
 import com.llamitatec.backend.client.resource.CreateClientResource;
 import com.llamitatec.backend.client.resource.UpdateClientResource;
-import com.llamitatec.backend.user.resource.CreateUserResource;
-import com.llamitatec.backend.user.resource.UpdateUserResource;
-import com.llamitatec.backend.user.resource.UserResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +42,8 @@ public class ClientControllers {
         return mapper.toResource(clientService.update(userId,mapper.toModel(resource)));
     }
 
-    @DeleteMapping("{clientId,userId}")
-    public ResponseEntity<?> deleteClient(@PathVariable("{clientId,userId}") Long clientId, Long userId){
+    @DeleteMapping("{clientId}")
+    public ResponseEntity<?> deleteClient(@PathVariable Long clientId, @PathVariable Long userId){
         return clientService.delete(clientId,userId);
     }
 }

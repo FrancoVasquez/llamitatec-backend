@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class ClientResource {
     private Long id;
+    private String name;
     private int age;
     private String email;
     private String phone;

@@ -21,6 +21,11 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotBlank
+    @Size(max=100)
+    private String name;
+
     private int age;
 
     @NotNull
@@ -56,7 +61,6 @@ public class Client {
     //Relationship
     @OneToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name= "user_id", nullable = false)
-    @JoinColumn(name= "user_name", nullable = false)
     @JsonIgnore
     private User user;
 }
