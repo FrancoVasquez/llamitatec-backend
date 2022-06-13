@@ -5,7 +5,6 @@ import com.llamitatec.backend.client.domain.persistence.ClientRepository;
 import com.llamitatec.backend.client.domain.service.ClientService;
 import com.llamitatec.backend.shared.exception.ResourceNotFoundException;
 import com.llamitatec.backend.shared.exception.ResourceValidationException;
-import com.llamitatec.backend.user.domain.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +58,7 @@ public class ClientServiceImpl implements ClientService {
             throw new ResourceValidationException(ENTITY,violations);
 
         if(!clientRepository.existsById(clientId))
-            throw new ResourceNotFoundException("User", clientId);
+            throw new ResourceNotFoundException("Client", clientId);
 
         return clientRepository.findById(clientId).map(data ->
                         clientRepository.save(data.withAddress(client.getAddress())
@@ -74,10 +73,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ResponseEntity<?> delete(Long clientId,Long userId) {
-        return clientRepository.findByIdAndUserId(clientId, userId).map(data ->{
+    public ResponseEntity<?> delete(Long employeeId) {
+        return clientRepository.findById(employeeId).map(data -> {
             clientRepository.delete(data);
             return ResponseEntity.ok().build();
-        }).orElseThrow(()-> new ResourceNotFoundException(ENTITY,clientId));
+        }).orElseThrow(() -> new ResourceNotFoundException(ENTITY, employeeId));
     }
 }

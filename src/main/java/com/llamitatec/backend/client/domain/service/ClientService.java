@@ -13,5 +13,5 @@ public interface ClientService {
     Client getById(Long clientId);
     Client create(Client client);
     Client update(Long clientId, Client client);
-    ResponseEntity<?> delete(Long clientId, Long userId);
+    ResponseEntity<?> delete(Long clientId);
 }
