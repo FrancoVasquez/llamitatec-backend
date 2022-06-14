@@ -21,14 +21,18 @@ public class RequestsController {
         this.mapper = mapper;
     }
 
-    @GetMapping("clients/{clientId}/requests")
+    @GetMapping("clients/{clientId}")
     public List<RequestResource> getAllRequestsByClientId(@PathVariable Long clientId) {
         return mapper.modelListToResource(requestService.getAllByClientId(clientId));
     }
+    @GetMapping("employees/{employeeId}")
+    public List<RequestResource> getAllRequestByEmployeeId(@PathVariable Long employeeId) {
+        return mapper.modelListToResource(requestService.getAllByEmployeeId(employeeId));
+    }
 
-    @PostMapping("clients/{clientId}/requests")
-    public RequestResource createRequest(@PathVariable Long clientId, @RequestBody CreateRequestResource request) {
-        return mapper.toResource(requestService.create(clientId, mapper.toModel(request)));
+    @PostMapping
+    public RequestResource createRequest(Long clientId, Long employeeId, Long serviceId, @RequestBody CreateRequestResource request) {
+        return mapper.toResource(requestService.create(clientId,employeeId,serviceId, mapper.toModel(request)));
     }
 
     @PutMapping("request/{requestId}")
@@ -36,7 +40,7 @@ public class RequestsController {
         return mapper.toResource(requestService.update(requestId, mapper.toModel(request)));
     }
 
-    @DeleteMapping("announcements/{announcementId}")
+    @DeleteMapping("request/{requestId}")
     public ResponseEntity<?> deleteRequest(@PathVariable Long requestId) {
         return requestService.delete(requestId);
     }

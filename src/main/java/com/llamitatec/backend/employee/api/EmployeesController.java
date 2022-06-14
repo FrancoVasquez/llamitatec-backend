@@ -32,9 +32,9 @@ public class EmployeesController {
         return mapper.toResource(employeeService.getById(userId));
     }
 
-    @PostMapping
-    public EmployeeResource createEmployee(@RequestBody CreateEmployeeResource resource){
-        return mapper.toResource(employeeService.create(mapper.toModel(resource)));
+    @PostMapping("users/{userId}/services/{serviceId}")
+    public EmployeeResource createEmployee(@PathVariable Long userId, @PathVariable Long serviceId,@RequestBody CreateEmployeeResource resource){
+        return mapper.toResource(employeeService.create(userId,serviceId,mapper.toModel(resource)));
     }
 
     @PutMapping("{employeeId}")

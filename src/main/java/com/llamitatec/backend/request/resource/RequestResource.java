@@ -1,5 +1,8 @@
 package com.llamitatec.backend.request.resource;
 
+import com.llamitatec.backend.client.resource.ClientResource;
+import com.llamitatec.backend.employee.resource.EmployeeResource;
+import com.llamitatec.backend.service.resource.ServiceResource;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,4 +14,7 @@ public class RequestResource {
     private String description;
     private String urlToImage;
     private Boolean paid;
+    private ServiceResource service;
+    private ClientResource client;
+    private EmployeeResource employee;
 }

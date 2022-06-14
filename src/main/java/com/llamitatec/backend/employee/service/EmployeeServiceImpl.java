@@ -3,8 +3,10 @@ package com.llamitatec.backend.employee.service;
 import com.llamitatec.backend.employee.domain.model.entity.Employee;
 import com.llamitatec.backend.employee.domain.persistence.EmployeeRepository;
 import com.llamitatec.backend.employee.domain.service.EmployeeService;
+import com.llamitatec.backend.service.domain.persistence.ServiceRepository;
 import com.llamitatec.backend.shared.exception.ResourceNotFoundException;
 import com.llamitatec.backend.shared.exception.ResourceValidationException;
+import com.llamitatec.backend.user.domain.persistence.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,14 @@ import java.util.Set;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private static final String ENTITY = "Employee";
+    private final UserRepository userRepository;
+    private final ServiceRepository serviceRepository;
     private final EmployeeRepository employeeRepository;
     private final Validator validator;
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, Validator validator) {
+    public EmployeeServiceImpl(UserRepository userRepository, ServiceRepository serviceRepository, EmployeeRepository employeeRepository, Validator validator) {
+        this.userRepository = userRepository;
+        this.serviceRepository = serviceRepository;
         this.employeeRepository = employeeRepository;
         this.validator = validator;
     }
@@ -42,13 +48,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee create(Employee employee) {
+    public Employee create(Long userId,Long serviceId,Employee employee) {
         Set<ConstraintViolation<Employee>> violations=validator.validate(employee);
 
         if(!violations.isEmpty())
             throw new ResourceValidationException(ENTITY,violations);
 
-        return employeeRepository.save(employee);
+        return userRepository.findById(userId).map(data -> {
+            employee.setUser(data);
+            return serviceRepository.findById(serviceId).map(service->{
+                employee.setService(service);
+                return employeeRepository.save(employee);
+            }).orElseThrow(() -> new ResourceNotFoundException("Service", serviceId));
+        }).orElseThrow(() -> new ResourceNotFoundException("User", userId));
     }
 
     @Override

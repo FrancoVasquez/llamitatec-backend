@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "api/v1/clients")
-public class ClientControllers {
+public class ClientsController {
     private final ClientService clientService;
     private final ClientMapper mapper;
 
 
-    public ClientControllers(ClientService clientService, ClientMapper mapper) {
+    public ClientsController(ClientService clientService, ClientMapper mapper) {
         this.clientService = clientService;
         this.mapper = mapper;
     }

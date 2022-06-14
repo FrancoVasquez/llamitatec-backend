@@ -14,7 +14,7 @@ public interface RequestService {
     Page<Request> getAllByEmployeeId(Long employeeId, Pageable pageable);
 
     //post, put, delete
-    Request create(Long clientId, Request request);
+    Request create(Long clientId, Long employeeId, Long serviceId, Request request);
     Request update(Long requestId, Request request);
     ResponseEntity<?> delete(Long requestId);
 }
