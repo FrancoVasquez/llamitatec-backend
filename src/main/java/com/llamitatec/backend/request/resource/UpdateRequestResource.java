@@ -24,7 +24,11 @@ public class UpdateRequestResource {
     @NotBlank
     private String urlToImage;
 
-    @NotNull
-    @NotBlank
     private Boolean paid;
+
+    private Long clientId;
+
+    private Long serviceId;
+
+    private Long employeeId;
 }

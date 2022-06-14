@@ -38,8 +38,6 @@ public class Request extends AuditModel {
     @NotBlank
     private String urlToImage;
 
-    @NotNull
-    @NotBlank
     private Boolean paid;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)

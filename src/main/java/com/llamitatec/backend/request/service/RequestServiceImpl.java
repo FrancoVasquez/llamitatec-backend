@@ -5,6 +5,7 @@ import com.llamitatec.backend.employee.domain.persistence.EmployeeRepository;
 import com.llamitatec.backend.request.domain.model.entity.Request;
 import com.llamitatec.backend.request.domain.persistence.RequestRepository;
 import com.llamitatec.backend.request.domain.service.RequestService;
+import com.llamitatec.backend.service.domain.persistence.ServiceRepository;
 import com.llamitatec.backend.shared.exception.ResourceNotFoundException;
 import com.llamitatec.backend.shared.exception.ResourceValidationException;
 import org.springframework.data.domain.Page;
@@ -22,11 +23,15 @@ import java.util.Set;
 @Service
 public class RequestServiceImpl implements RequestService {
     private static final String ENTITY = "Request";
+    private final ServiceRepository serviceRepository;
+    private final EmployeeRepository employeeRepository;
     private final ClientRepository clientRepository;
     private final RequestRepository requestRepository;
     private final Validator validator;
 
-    public RequestServiceImpl(ClientRepository clientRepository, RequestRepository requestRepository, Validator validator) {
+    public RequestServiceImpl(ServiceRepository serviceRepository, EmployeeRepository employeeRepository, ClientRepository clientRepository, RequestRepository requestRepository, Validator validator) {
+        this.serviceRepository = serviceRepository;
+        this.employeeRepository = employeeRepository;
         this.clientRepository = clientRepository;
         this.requestRepository = requestRepository;
         this.validator = validator;
@@ -63,16 +68,22 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request create(Long clientId, Request request) {
+    public Request create(Long clientId, Long employeeId, Long serviceId, Request request) {
         Set<ConstraintViolation<Request>> violations = validator.validate(request);
 
         if(!violations.isEmpty())
             throw new ResourceValidationException(ENTITY, violations);
 
-        return clientRepository.findById(clientId).map(data -> {
-            request.setClient(data);
-            return requestRepository.save(request);
-        }).orElseThrow(() -> new ResourceNotFoundException("Client", clientId));
+        return serviceRepository.findById(serviceId).map(data -> {
+            request.setService(data);
+            return clientRepository.findById(clientId).map(client->{
+                request.setClient(client);
+                return employeeRepository.findById(employeeId).map(employee->{
+                    request.setEmployee(employee);
+                return requestRepository.save(request);
+                }).orElseThrow(() -> new ResourceNotFoundException("Service", serviceId));
+            }).orElseThrow(() -> new ResourceNotFoundException("Client", clientId));
+        }).orElseThrow(() -> new ResourceNotFoundException("Employee", employeeId));
     }
 
     @Override
