@@ -43,8 +43,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getById(Long employeeId) {
-        return employeeRepository.findByUserId(employeeId);
+    public List<Employee> getAllByServiceId(Long serviceId) {
+        return employeeRepository.findAllByServiceId(serviceId);
+    }
+
+    @Override
+    public Employee getById(Long userId) {
+        return employeeRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Employee getByServiceId(Long serviceId) {
+        return employeeRepository.findByServiceId(serviceId);
     }
 
     @Override
@@ -76,7 +86,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                         employeeRepository.save(data.withAge(employee.getAge())
                                 .withAltphone(employee.getAltphone())
                                 .withDescription(employee.getDescription())
-                                .withEmail(employee.getEmail())
                                 .withPhone(employee.getPhone())
                                 .withUrlToImage(employee.getUrlToImage())
                         ))
