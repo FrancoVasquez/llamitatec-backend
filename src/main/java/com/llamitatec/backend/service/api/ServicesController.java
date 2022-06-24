@@ -6,10 +6,10 @@ import com.llamitatec.backend.service.mapping.ServiceMapper;
 import com.llamitatec.backend.service.resource.CreateServiceResource;
 import com.llamitatec.backend.service.resource.ServiceResource;
 import com.llamitatec.backend.service.resource.UpdateServiceResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/v1/services")
@@ -24,8 +24,8 @@ public class ServicesController {
     }
 
     @GetMapping
-    public Page<ServiceResource> getAllServices(Pageable pageable){
-        return mapper.modelListPage(serviceService.getAll(),pageable);
+    public List<ServiceResource> getAllServices(){
+        return mapper.modelListToResource(serviceService.getAll());
     }
 
     @GetMapping("{serviceId}")
