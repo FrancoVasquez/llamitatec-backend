@@ -21,12 +21,10 @@ public class User extends AuditModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @NotNull
     @NotBlank
-    @Size(max=100)
-    private String name;
-
+    @Size(max = 40)
+    private String email;
     @NotNull
     @NotBlank
     @Size(max=50)

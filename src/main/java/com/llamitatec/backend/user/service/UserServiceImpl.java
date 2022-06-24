@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         if(!violations.isEmpty())
             throw new ResourceValidationException(ENTITY,violations);
         return userRepository.findById(userId).map(user ->
-                        userRepository.save(user.withName(request.getName())
+                        userRepository.save(user.withEmail(request.getEmail())
                                 .withPassword(request.getPassword())
                                 .withTypeuser(request.getTypeuser())))
                 .orElseThrow(()-> new ResourceNotFoundException(ENTITY,userId));
