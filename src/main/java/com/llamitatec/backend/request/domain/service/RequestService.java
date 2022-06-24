@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface RequestService {
+    Request getById(Long requestId);
+    List<Request> getAll();
     List<Request> getAllByClientId(Long clientId);
     Page<Request> getAllByClientId(Long clientId, Pageable pageable);
     List<Request> getAllByEmployeeId(Long employeeId);

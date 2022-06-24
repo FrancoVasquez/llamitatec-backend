@@ -12,9 +12,8 @@ import javax.validation.constraints.Size;
 public class CreateUserResource {
     @NotNull
     @NotBlank
-    @Size(max=100)
-    private String name;
-
+    @Size(max = 40)
+    private String email;
     @NotNull
     @NotBlank
     private String typeuser;

@@ -29,17 +29,10 @@ public class Employee extends AuditModel {
     private String name;
 
     private int age;
-
-    @NotNull
-    @NotBlank
-    @Size(max = 40)
-    private String email;
-
     @NotNull
     @NotBlank
     @Size(max = 9)
     private String phone;
-
     @NotNull
     @NotBlank
     @Size(max = 5)

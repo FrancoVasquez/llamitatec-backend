@@ -6,10 +6,10 @@ import com.llamitatec.backend.employee.resource.CreateEmployeeResource;
 
 import com.llamitatec.backend.employee.resource.EmployeeResource;
 import com.llamitatec.backend.employee.resource.UpdateEmployeeResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/v1/employees")
@@ -23,17 +23,22 @@ public class EmployeesController {
     }
 
     @GetMapping
-    public Page<EmployeeResource> getAllEmployees(Pageable pageable){
-        return mapper.modelListPage(employeeService.getAll(),pageable);
+    public List<EmployeeResource> getAllEmployees(){
+        return mapper.modelListToResource(employeeService.getAll());
     }
 
-    @GetMapping("{userId}")
-    public EmployeeResource getEmployeeById(@PathVariable("userId") Long userId){
+    @GetMapping("users/{userId}")
+    public EmployeeResource getEmployeeUserById(@PathVariable("userId") Long userId){
         return mapper.toResource(employeeService.getById(userId));
     }
 
-    @PostMapping("users/{userId}/services/{serviceId}")
-    public EmployeeResource createEmployee(@PathVariable Long userId, @PathVariable Long serviceId,@RequestBody CreateEmployeeResource resource){
+    @GetMapping("services/{serviceId}")
+    public List<EmployeeResource> getEmployeeByServiceId(@PathVariable("serviceId") Long serviceId){
+        return mapper.modelListToResource(employeeService.getAllByServiceId(serviceId));
+    }
+
+    @PostMapping
+    public EmployeeResource createEmployee(Long userId,Long serviceId,@RequestBody CreateEmployeeResource resource){
         return mapper.toResource(employeeService.create(userId,serviceId,mapper.toModel(resource)));
     }
 

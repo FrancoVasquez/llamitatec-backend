@@ -16,12 +16,6 @@ public class UpdateEmployeeResource {
     private String name;
 
     private int age;
-
-    @NotNull
-    @NotBlank
-    @Size(max = 40)
-    private String email;
-
     @NotNull
     @NotBlank
     @Size(max = 9)
@@ -40,8 +34,4 @@ public class UpdateEmployeeResource {
     @NotBlank
     @Size(max = 1000)
     private String description;
-
-    private Long userId;
-
-    private Long serviceId;
 }

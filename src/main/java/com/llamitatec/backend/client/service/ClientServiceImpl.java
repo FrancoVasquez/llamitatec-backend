@@ -71,7 +71,6 @@ public class ClientServiceImpl implements ClientService {
                                 .withAge(client.getAge())
                                 .withAltphone(client.getAltphone())
                                 .withDescription(client.getDescription())
-                                .withEmail(client.getEmail())
                                 .withPhone(client.getPhone())
                                 .withUrlToImage(client.getUrlToImage())
                                 ))

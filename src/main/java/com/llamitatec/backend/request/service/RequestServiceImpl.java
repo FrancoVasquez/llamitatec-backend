@@ -38,6 +38,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public Request getById(Long requestId) {
+        return requestRepository.findById(requestId)
+                .orElseThrow(()-> new ResourceNotFoundException(ENTITY,requestId));
+    }
+
+    @Override
+    public List<Request> getAll() {
+        return requestRepository.findAll();
+    }
+
+    @Override
     public List<Request> getAllByClientId(Long clientId) {
         var existingClient = requestRepository.findById(clientId);
 
