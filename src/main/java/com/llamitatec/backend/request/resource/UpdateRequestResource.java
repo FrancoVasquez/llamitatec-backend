@@ -25,10 +25,4 @@ public class UpdateRequestResource {
     private String urlToImage;
 
     private Boolean paid;
-
-    private Long clientId;
-
-    private Long serviceId;
-
-    private Long employeeId;
 }
