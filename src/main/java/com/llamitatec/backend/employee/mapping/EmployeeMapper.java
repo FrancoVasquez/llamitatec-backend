@@ -25,7 +25,9 @@ public class EmployeeMapper implements Serializable {
     public Page<EmployeeResource> modelListPage(List<Employee> modelList, Pageable pageable){
         return new PageImpl<>(mapper.mapList(modelList,EmployeeResource.class),pageable,modelList.size());
     }
-
+    public List<EmployeeResource> modelListToResource(List<Employee> modelList){
+        return mapper.mapList(modelList, EmployeeResource.class);
+    }
     public Employee toModel(CreateEmployeeResource resource){
         return mapper.map(resource,Employee.class);
     }

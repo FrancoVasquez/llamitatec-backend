@@ -26,6 +26,11 @@ public class ServiceMapper implements Serializable {
         return new PageImpl<>(mapper.mapList(modelList,ServiceResource.class),pageable,modelList.size());
     }
 
+
+    public List<ServiceResource> modelListToResource(List<Service> modelList){
+        return mapper.mapList(modelList, ServiceResource.class);
+    }
+
     public Service toModel(CreateServiceResource resource){
         return mapper.map(resource,Service.class);
     }

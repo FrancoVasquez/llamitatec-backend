@@ -16,12 +16,6 @@ public class CreateClientResource {
     private String name;
 
     private int age;
-
-    @NotNull
-    @NotBlank
-    @Size(max = 40)
-    private String email;
-
     @NotNull
     @NotBlank
     @Size(max = 9)

@@ -19,11 +19,6 @@ public class UpdateClientResource {
 
     @NotNull
     @NotBlank
-    @Size(max = 40)
-    private String email;
-
-    @NotNull
-    @NotBlank
     @Size(max = 9)
     private String phone;
 
