@@ -5,15 +5,16 @@ import com.llamitatec.backend.client.mapping.ClientMapper;
 import com.llamitatec.backend.client.resource.ClientResource;
 import com.llamitatec.backend.client.resource.CreateClientResource;
 import com.llamitatec.backend.client.resource.UpdateClientResource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Clients", description = "Create, read, update and delete clients")
 @RestController
 @RequestMapping(value = "api/v1/clients")
-@PreAuthorize("hasRole('CLIENT') or hasRole('EMPLOYEE')")
 public class ClientsController {
     private final ClientService clientService;
     private final ClientMapper mapper;

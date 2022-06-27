@@ -6,11 +6,14 @@ import com.llamitatec.backend.service.mapping.ServiceMapper;
 import com.llamitatec.backend.service.resource.CreateServiceResource;
 import com.llamitatec.backend.service.resource.ServiceResource;
 import com.llamitatec.backend.service.resource.UpdateServiceResource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Services", description = "Create, read, update and delete services")
 @RestController
 @RequestMapping(value = "api/v1/services")
 public class ServicesController {

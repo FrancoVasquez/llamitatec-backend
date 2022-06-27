@@ -6,11 +6,13 @@ import com.llamitatec.backend.employee.resource.CreateEmployeeResource;
 
 import com.llamitatec.backend.employee.resource.EmployeeResource;
 import com.llamitatec.backend.employee.resource.UpdateEmployeeResource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Employees", description = "Create, read, update and delete employees")
 @RestController
 @RequestMapping(value = "api/v1/employees")
 public class EmployeesController {
@@ -37,8 +39,8 @@ public class EmployeesController {
         return mapper.modelListToResource(employeeService.getAllByServiceId(serviceId));
     }
 
-    @PostMapping
-    public EmployeeResource createEmployee(Long userId,Long serviceId,@RequestBody CreateEmployeeResource resource){
+    @PostMapping("{userId}/{serviceId}")
+    public EmployeeResource createEmployee(@PathVariable("userId") Long userId,@PathVariable("serviceId")Long serviceId,@RequestBody CreateEmployeeResource resource){
         return mapper.toResource(employeeService.create(userId,serviceId,mapper.toModel(resource)));
     }
 

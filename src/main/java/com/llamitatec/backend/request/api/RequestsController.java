@@ -5,11 +5,13 @@ import com.llamitatec.backend.request.mapping.RequestMapper;
 import com.llamitatec.backend.request.resource.CreateRequestResource;
 import com.llamitatec.backend.request.resource.RequestResource;
 import com.llamitatec.backend.request.resource.UpdateRequestResource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Requests", description = "Create, read, update and delete requests")
 @RestController
 @RequestMapping(value = "api/v1/requests")
 public class RequestsController {
