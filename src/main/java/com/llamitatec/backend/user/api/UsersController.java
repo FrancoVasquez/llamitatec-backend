@@ -1,17 +1,23 @@
 package com.llamitatec.backend.user.api;
 
+import com.llamitatec.backend.security.domain.service.communication.AuthenticateRequest;
+import com.llamitatec.backend.security.domain.service.communication.RegisterRequest;
 import com.llamitatec.backend.user.domain.service.UserService;
 import com.llamitatec.backend.user.mapping.UserMapper;
-import com.llamitatec.backend.user.resource.CreateUserResource;
-import com.llamitatec.backend.user.resource.UpdateUserResource;
 import com.llamitatec.backend.user.resource.UserResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.List;
+
+@SecurityRequirement(name = "acme")
+@Tag(name = "Users", description = "Create, read, update and delete users")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(value = "api/v1/users")
+@RequestMapping("/api/v1/users")
 public class UsersController {
     private final UserService userService;
     private final UserMapper mapper;
@@ -22,8 +28,8 @@ public class UsersController {
     }
 
     @GetMapping
-    public Page<UserResource> getAllUsers(Pageable pageable){
-        return mapper.modelListPage(userService.getAll(),pageable);
+    public List<UserResource> getAllUsers(){
+        return mapper.modelListToResource(userService.getAll());
     }
 
     @GetMapping("{userId}")
@@ -31,11 +37,17 @@ public class UsersController {
         return mapper.toResource(userService.getById(userId));
     }
 
-    @PostMapping
-    public UserResource createUser(@RequestBody CreateUserResource resource){
-        return mapper.toResource(userService.create(mapper.toModel(resource)));
+    @PostMapping("/auth/sign-in")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthenticateRequest request) {
+        return userService.authenticate(request);
     }
 
+    @PostMapping("/auth/sign-up")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request) {
+        return userService.register(request);
+    }
+
+    /*
     @PutMapping("{userId}")
     private UserResource updateUser(@PathVariable("userId") Long userId,@RequestBody UpdateUserResource resource){
         return mapper.toResource(userService.update(userId,mapper.toModel(resource)));
@@ -45,4 +57,5 @@ public class UsersController {
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId){
         return userService.delete(userId);
     }
+    */
 }
