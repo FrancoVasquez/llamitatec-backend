@@ -1,20 +1,20 @@
 package com.llamitatec.backend.user.domain.service;
 
+import com.llamitatec.backend.security.domain.service.communication.AuthenticateRequest;
+import com.llamitatec.backend.security.domain.service.communication.RegisterRequest;
 import com.llamitatec.backend.user.domain.model.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     //get
     List<User> getAll();
-    Page<User> getAll(Pageable pageable);
     User getById(Long userId);
 
     //post, put, delete
-    User create(User user);
-    User update(Long userId, User request);
-    ResponseEntity<?> delete(Long userId);
+    ResponseEntity<?> authenticate(AuthenticateRequest request);
+
+    ResponseEntity<?> register(RegisterRequest request);
 }
