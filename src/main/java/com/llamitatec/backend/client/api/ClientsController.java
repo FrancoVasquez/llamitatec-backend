@@ -8,10 +8,12 @@ import com.llamitatec.backend.client.resource.UpdateClientResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "api/v1/clients")
+@PreAuthorize("hasRole('CLIENT') or hasRole('EMPLOYEE')")
 public class ClientsController {
     private final ClientService clientService;
     private final ClientMapper mapper;
