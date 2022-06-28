@@ -1,39 +1,74 @@
 package com.llamitatec.backend.user.service;
 
+import com.llamitatec.backend.security.domain.model.entity.Role;
+import com.llamitatec.backend.security.domain.model.enumeration.Roles;
+import com.llamitatec.backend.security.domain.persistence.RoleRepository;
+import com.llamitatec.backend.security.domain.service.communication.AuthenticateRequest;
+import com.llamitatec.backend.security.domain.service.communication.AuthenticateResponse;
+import com.llamitatec.backend.security.domain.service.communication.RegisterRequest;
+import com.llamitatec.backend.security.domain.service.communication.RegisterResponse;
+import com.llamitatec.backend.security.middleware.JwtHandler;
+import com.llamitatec.backend.security.middleware.UserDetailsImpl;
+import com.llamitatec.backend.security.resource.AuthenticateResource;
 import com.llamitatec.backend.shared.exception.ResourceNotFoundException;
-import com.llamitatec.backend.shared.exception.ResourceValidationException;
+import com.llamitatec.backend.shared.mapping.EnhancedModelMapper;
 import com.llamitatec.backend.user.domain.model.entity.User;
 import com.llamitatec.backend.user.domain.persistence.UserRepository;
 import com.llamitatec.backend.user.domain.service.UserService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.llamitatec.backend.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.hibernate.usertype.DynamicParameterizedType.ENTITY;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private static final String ENTITY = "User";
-    private final UserRepository userRepository;
-    private final Validator validator;
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl(UserRepository userRepository, Validator validator){
-        this.userRepository=userRepository;
-        this.validator=validator;
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    JwtHandler handler;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+    @Autowired
+    EnhancedModelMapper mapper;
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User not found with username: %s", email)));
+        return UserDetailsImpl.build(user);
     }
 
     @Override
     public List<User> getAll() {
         return userRepository.findAll();
-    }
-
-    @Override
-    public Page<User> getAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
     }
 
     @Override
@@ -43,15 +78,84 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User user) {
-        Set<ConstraintViolation<User>> violations=validator.validate(user);
+    public ResponseEntity<?> authenticate(AuthenticateRequest request)
+    {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(), request.getPassword()
+                    ));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if(!violations.isEmpty())
-            throw new ResourceValidationException(ENTITY,violations);
+            String token = handler.generateToken(authentication);
 
-        return userRepository.save(user);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+            AuthenticateResource resource = mapper.map(userDetails, AuthenticateResource.class);
+            resource.setRoles(roles);
+            resource.setToken(token);
+
+            AuthenticateResponse response = new AuthenticateResponse(resource);
+
+            return ResponseEntity.ok(response.getResource());
+
+
+        } catch (Exception e) {
+            AuthenticateResponse response = new AuthenticateResponse(String.format("An error occurred while authenticating: %s", e.getMessage()));
+            return ResponseEntity.badRequest().body(response.getMessage());
+        }
     }
 
+    @Override
+    public ResponseEntity<?> register(RegisterRequest request)
+    {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            AuthenticateResponse response = new AuthenticateResponse("Email is already used.");
+            return ResponseEntity.badRequest()
+                    .body(response.getMessage());
+        }
+
+        try {
+
+            Set<String> rolesStringSet = request.getRoles();
+            Set<Role> roles = new HashSet<>();
+
+            if (rolesStringSet == null) {
+                roleRepository.findByName(Roles.ROLE_CLIENT)
+                        .map(roles::add)
+                        .orElseThrow(() -> new RuntimeException("Role not found."));
+            } else {
+                rolesStringSet.forEach(roleString ->
+                        roleRepository.findByName(Roles.valueOf(roleString))
+                                .map(roles::add)
+                                .orElseThrow(() -> new RuntimeException("Role not found.")));
+            }
+
+            logger.info("Roles: {}", roles);
+
+            User user = new User()
+                    .withEmail(request.getEmail())
+                    .withPassword(encoder.encode(request.getPassword()))
+                    .withRoles(roles);
+
+
+            userRepository.save(user);
+            UserResource resource = mapper.map(user, UserResource.class);
+            RegisterResponse response = new RegisterResponse(resource);
+            return ResponseEntity.ok(response.getResource());
+
+        } catch (Exception e) {
+
+            RegisterResponse response = new RegisterResponse(e.getMessage());
+            return ResponseEntity.badRequest().body(response.getMessage());
+
+        }
+    }
+
+    /*
     @Override
     public User update(Long userId, User request) {
         Set<ConstraintViolation<User>> violations=validator.validate(request);
@@ -70,5 +174,5 @@ public class UserServiceImpl implements UserService {
             userRepository.delete(user);
             return ResponseEntity.ok().build();
         }).orElseThrow(()-> new ResourceNotFoundException(ENTITY,userId));
-    }
+    }*/
 }
