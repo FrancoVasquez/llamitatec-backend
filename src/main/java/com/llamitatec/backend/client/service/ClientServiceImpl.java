@@ -16,6 +16,8 @@ import javax.validation.Validator;
 import java.util.List;
 import java.util.Set;
 
+import static org.hibernate.usertype.DynamicParameterizedType.ENTITY;
+
 @Service
 public class ClientServiceImpl implements ClientService {
     private static final String ENTITY = "Client";
@@ -42,6 +44,12 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client getByUserId(Long userId) {
         return clientRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Client getById(Long id) {
+        return clientRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException(ENTITY,id));
     }
 
     @Override
