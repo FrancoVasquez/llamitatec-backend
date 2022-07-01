@@ -50,7 +50,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> getAllByClientId(Long clientId) {
-        var existingClient = requestRepository.findById(clientId);
+        var existingClient = requestRepository.findByClientId(clientId);
 
         if(existingClient.isEmpty())
             throw new ResourceNotFoundException("Client", clientId);
@@ -65,7 +65,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> getAllByEmployeeId(Long employeeId) {
-        var existingEmployee = requestRepository.findById(employeeId);
+        var existingEmployee = requestRepository.findByEmployeeId(employeeId);
 
         if(existingEmployee.isEmpty())
             throw new ResourceNotFoundException("Employee", employeeId);

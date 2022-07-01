@@ -5,11 +5,13 @@ import com.llamitatec.backend.client.mapping.ClientMapper;
 import com.llamitatec.backend.client.resource.ClientResource;
 import com.llamitatec.backend.client.resource.CreateClientResource;
 import com.llamitatec.backend.client.resource.UpdateClientResource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Clients", description = "Create, read, update and delete clients")
 @RestController
 @RequestMapping(value = "api/v1/clients")
 public class ClientsController {
@@ -30,6 +32,11 @@ public class ClientsController {
     @GetMapping("{userId}")
     public ClientResource getClientByUserId(@PathVariable("userId") Long userId){
         return mapper.toResource(clientService.getByUserId(userId));
+    }
+
+    @GetMapping("client/{clientId}")
+    public ClientResource getClientByClientId(@PathVariable("clientId") Long clientId){
+        return mapper.toResource(clientService.getById(clientId));
     }
 
     @PostMapping("{userId}")

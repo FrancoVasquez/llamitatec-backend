@@ -1,19 +1,23 @@
 package com.llamitatec.backend.user.domain.model.entity;
 
+import com.llamitatec.backend.security.domain.model.entity.Role;
 import com.llamitatec.backend.shared.domain.model.AuditModel;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@With
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@With
+@AllArgsConstructor
 @Table(name = "users")
 public class User extends AuditModel {
 
@@ -21,16 +25,19 @@ public class User extends AuditModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @NotBlank
-    @Size(max = 40)
+    @Column(unique = true)
+    @Size(max = 50)
+    @Email
     private String email;
-    @NotNull
+
     @NotBlank
-    @Size(max=50)
+    @Size(max = 120)
     private String password;
 
-    @NotNull
-    @NotBlank
-    private String typeuser;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 }
